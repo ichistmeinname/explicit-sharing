@@ -20,12 +20,12 @@ Stability:     experimental
 Extra-Source-Files: Test.hs, permsort.hs, reverse.hs, last.hs
 
 Library
-  Build-Depends:    base >= 3 && < 5, containers, mtl < 2,
-                    template-haskell >= 2.4 && < 2.6,
-                    derive >= 2.3.0.1 && < 2.5
+  Build-Depends:    base,
+                    containers,
+                    mtl,
+                    template-haskell
   Exposed-Modules:  Control.Monad.Sharing,
                     Control.Monad.Sharing.Classes,
-                    Data.Monadic.Derive,
                     Data.Monadic.List
   Other-Modules:    Control.Monad.Sharing.Implementation.CPS
   Ghc-Options:      -Wall -fno-warn-name-shadowing
