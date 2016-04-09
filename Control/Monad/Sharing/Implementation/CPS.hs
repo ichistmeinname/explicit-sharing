@@ -27,6 +27,7 @@ module Control.Monad.Sharing.Implementation.CPS (
 
  ) where
 
+import Control.Applicative ( Alternative(..) )
 import Control.Monad       ( MonadPlus(..) )
 import Control.Monad.State ( MonadState(..), gets, modify )
 
@@ -81,6 +82,15 @@ storeValue k v = modify (\s -> s { heap = M.insert k (Untyped v) (heap s) })
 
 -- The monad instance is an inlined version of the instances for
 -- continuation and reader monads.
+instance Nondet n => Functor (Lazy n)
+ where
+  fmap f x = x >>= return . f
+
+instance Nondet n => Applicative (Lazy n)
+ where
+  pure  = return
+  m1 <*> m2 = m1 >>= \f -> m2 >>= \x -> return (f x)
+
 instance Nondet n => Monad (Lazy n)
  where
   return x = Lazy (\c -> c x)
@@ -89,6 +99,11 @@ instance Nondet n => Monad (Lazy n)
 
 -- The 'MonadPlus' instance reuses corresponding operations of the
 -- underlying 'Nondet' instance.
+instance Nondet n => Alternative (Lazy n)
+ where
+  empty = mzero
+  (<|>) = mplus
+
 instance Nondet n => MonadPlus (Lazy n)
  where
   mzero       = Lazy (\_ _ -> failure)
